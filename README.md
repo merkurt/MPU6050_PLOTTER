@@ -1,1 +1,1 @@
-coded by ömer kurt
+from ömer kurt
