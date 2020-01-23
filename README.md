@@ -1,2 +1,1 @@
-# MPU6050
-reading, plotting vs
+coded by ömer kurt
