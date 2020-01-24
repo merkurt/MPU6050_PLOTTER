@@ -13,16 +13,15 @@ class PortReader(object):
 		self.AcXArray=list()
 		self.AcYArray=list()
 		self.AcZArray=list()
-
+		self.start_time=datetime.now()
 		try:
-			self.start_time=datetime.now()
-			self.serial_port_list=serial.tools.list_ports
 			self.sp=serial.Serial(port,baudrate,timeout=0.1)
 			self.sp.flush()
 			self.buffer_lock=threading.Lock()
 			self.thread= threading.Thread(target=self.thread_foo,args=())
 			self.thread.daemon=True
 			self.thread.start()
+			print("it's fine")
 		except Exception:
 			print("Serial port can't open!")
 			sys.exit(0)

@@ -1,10 +1,12 @@
 import sys
 import port_lister
+import time
 from port import PortReader
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import pyqtgraph as pg
 min_width=120
+port=0
 serial_port_list=list()
 baud_rate_list=["110", "300", "600", "1200", "2400", "4800", "9600", "14400", "19200", "38400", "57600", "115200", "128000", " 256000"]
 class GuiPencere(QWidget):
@@ -49,6 +51,19 @@ class GuiPencere(QWidget):
 		self.GBSerialLayout.addWidget(self.SerialBaudrateCombo)
 		self.GBSerialLayout.addWidget(self.SerialRefreshButon)
 
+		self.GBConnect=QGroupBox("Control")
+		self.GBConnect.setAlignment(Qt.AlignCenter)
+		self.GBConnectLayout=QVBoxLayout(self)
+		self.GBConnect.setLayout(self.GBConnectLayout)
+		self.GBConnect.setMaximumWidth(min_width)
+		self.GBConnect.setMinimumWidth(min_width)
+		self.SerialConnectButon=QPushButton("START")
+		self.SerialConnectButon.clicked.connect(self.port_open_starter)
+		self.SerialDisconnectButon=QPushButton("STOP")
+		self.SerialDisconnectButon.clicked.connect(close_serial_port)
+		self.GBConnectLayout.addWidget(self.SerialConnectButon)
+		self.GBConnectLayout.addWidget(self.SerialDisconnectButon)
+
 		self.GBClear=QGroupBox("Data")
 		self.GBClear.setAlignment(Qt.AlignCenter)
 		self.GBClearLayout=QVBoxLayout(self)
@@ -58,14 +73,12 @@ class GuiPencere(QWidget):
 		self.ClearButon=QPushButton("CLEAR")
 		self.GBClearLayout.addWidget(self.ClearButon)
 
-
-
-
 		self.mainLayout.addLayout(self.vLayoutL)
 		self.mainLayout.addLayout(self.vLayoutR)
 
 		self.vLayoutL.addWidget(self.GBInfo)
 		self.vLayoutL.addWidget(self.GBSerial)
+		self.vLayoutL.addWidget(self.GBConnect)
 		self.vLayoutL.addWidget(self.GBClear)
 		self.vLayoutL.addStretch(1)
 
@@ -74,15 +87,15 @@ class GuiPencere(QWidget):
 		self.plotter3=pg.PlotWidget()
 		self.plotter4=pg.PlotWidget()
 
+		self.plotter1.setYRange(-20000,20000)
+		self.plotter2.setYRange(-20000,20000)
+		self.plotter3.setYRange(-20000,20000)
+		self.plotter4.setYRange(-20000,20000)
+
 		self.plotter1.setTitle("X Axis")
 		self.plotter2.setTitle("Y Axis")
 		self.plotter3.setTitle("Z Axis")
 		self.plotter4.setTitle("Axis Combined")
-
-		self.plotter1.setLabel("bottom","time(sec)")
-		self.plotter2.setLabel("bottom","time(sec)")
-		self.plotter3.setLabel("bottom","time(sec)")
-		self.plotter4.setLabel("bottom","time(sec)")
 
 		self.vLayoutR.addWidget(self.plotter1)
 		self.vLayoutR.addWidget(self.plotter2)
@@ -107,9 +120,6 @@ class GuiPencere(QWidget):
 
 		pg.setConfigOptions(antialias=True)
 
-		#self.timer=QTimer()
-		#self.timer.timeout.connect(self.cycle)
-		#self.timer.start(33)
 
 	def cycle(self):
 		[timeArray,AcXArray,AcYArray,AcZArray] = port.takeNpArray()
@@ -125,17 +135,26 @@ class GuiPencere(QWidget):
 		self.SerialPortCombo.clear()
 		self.SerialPortCombo.addItems(get_port_list())
 
+	def port_open_starter(self):
+		open_serial_port(self.SerialPortCombo.currentText(),int(self.SerialBaudrateCombo.currentText()))
+		self.timer=QTimer()
+		self.timer.timeout.connect(self.cycle)
+		self.timer.start(33)
+
 
 def get_port_list():
 	return port_lister.serial_ports()
 
+
+def open_serial_port(com,baudrate):
+	global port
+	port=PortReader(com,baudrate)
+
+def close_serial_port():
+	port.close()
+
 if __name__=="__main__":
-
-	
-	
-
 	uygulama=QApplication(sys.argv)
 	pencere=GuiPencere()
 	pencere.show()
 	uygulama.exec_()
-	port=PortReader(sys.argv[1],sys.argv[2])
