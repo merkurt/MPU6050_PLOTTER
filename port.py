@@ -26,10 +26,19 @@ class PortReader(object):
 			print("Serial port can't open!")
 			sys.exit(0)
 
+	def clear_array(self):
+		self.buffer_lock.acquire()
+		self.start_time=datetime.now()
+		self.timeArray = []
+		self.AcXArray = []
+		self.AcYArray = []
+		self.AcZArray = []
+		self.buffer_lock.release()
+
 	def thread_foo(self):
 		time.sleep(1)
 
-		while True:
+		while self.sp.isOpen()==True:
 			
 			self.buffer_lock.acquire()
 			buff = self.sp.readline().split(b"/")
@@ -67,6 +76,9 @@ class PortReader(object):
 		back = [self.timeArray,self.AcXArray,self.AcYArray,self.AcZArray]
 		self.buffer_lock.release()
 		return back
+
+	def close_PortReader(self):
+		self.sp.close()
 
 if __name__=="__main__":
 

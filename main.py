@@ -60,6 +60,7 @@ class GuiPencere(QWidget):
 		self.SerialConnectButon=QPushButton("START")
 		self.SerialConnectButon.clicked.connect(self.port_open_starter)
 		self.SerialDisconnectButon=QPushButton("STOP")
+		self.SerialDisconnectButon.setEnabled(False)
 		self.SerialDisconnectButon.clicked.connect(close_serial_port)
 		self.GBConnectLayout.addWidget(self.SerialConnectButon)
 		self.GBConnectLayout.addWidget(self.SerialDisconnectButon)
@@ -71,6 +72,8 @@ class GuiPencere(QWidget):
 		self.GBClear.setMaximumWidth(min_width)
 		self.GBClear.setMinimumWidth(min_width)
 		self.ClearButon=QPushButton("CLEAR")
+		self.ClearButon.setEnabled(False)
+		self.ClearButon.clicked.connect(self.data_clear)
 		self.GBClearLayout.addWidget(self.ClearButon)
 
 		self.mainLayout.addLayout(self.vLayoutL)
@@ -124,12 +127,12 @@ class GuiPencere(QWidget):
 	def cycle(self):
 		[timeArray,AcXArray,AcYArray,AcZArray] = port.takeNpArray()
 		if len(timeArray)>0:
-			self.plotter1_curv.setData(x=timeArray,y=AcXArray)
-			self.plotter2_curv.setData(x=timeArray,y=AcYArray)
-			self.plotter3_curv.setData(x=timeArray,y=AcZArray)
-			self.plotter4_curv1.setData(x=timeArray,y=AcXArray)
-			self.plotter4_curv2.setData(x=timeArray,y=AcYArray)
-			self.plotter4_curv3.setData(x=timeArray,y=AcZArray)
+			self.plotter1_curv.setData(x=timeArray, y=AcXArray)
+			self.plotter2_curv.setData(x=timeArray, y=AcYArray)
+			self.plotter3_curv.setData(x=timeArray, y=AcZArray)
+			self.plotter4_curv1.setData(x=timeArray, y=AcXArray)
+			self.plotter4_curv2.setData(x=timeArray, y=AcYArray)
+			self.plotter4_curv3.setData(x=timeArray, y=AcZArray)
 
 	def port_list_update(self):
 		self.SerialPortCombo.clear()
@@ -137,21 +140,32 @@ class GuiPencere(QWidget):
 
 	def port_open_starter(self):
 		open_serial_port(self.SerialPortCombo.currentText(),int(self.SerialBaudrateCombo.currentText()))
+		self.SerialConnectButon.setDisabled(True)
+		self.SerialDisconnectButon.setEnabled(True)
+		self.ClearButon.setEnabled(True)
 		self.timer=QTimer()
 		self.timer.timeout.connect(self.cycle)
 		self.timer.start(33)
 
+	def data_clear(self):
+		port.clear_array()
+		
 
 def get_port_list():
 	return port_lister.serial_ports()
-
 
 def open_serial_port(com,baudrate):
 	global port
 	port=PortReader(com,baudrate)
 
 def close_serial_port():
-	port.close()
+	port.close_PortReader()
+	pencere.SerialConnectButon.setEnabled(True)
+	pencere.SerialDisconnectButon.setEnabled(False)
+	pencere.ClearButon.setEnabled(False)
+	pencere.timer.stop()
+
+
 
 if __name__=="__main__":
 	uygulama=QApplication(sys.argv)
