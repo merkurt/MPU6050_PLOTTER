@@ -1,7 +1,5 @@
+this project is done!
+
+everything work properly, maybe i can add something later
+
 from ömer kurt
-
-
-running version
-
-to do list:
-add x,y,z and combine axis auto pan button
