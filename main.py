@@ -29,7 +29,7 @@ class GuiPencere(QWidget):
 		self.GBInfo.setMaximumWidth(min_width)
 		self.GBInfo.setMinimumWidth(min_width)
 		self.InfoLabelText=QLabel("STATUS")
-		self.InfoLabel=QLabel("<b>durum</b>")
+		self.InfoLabel=QLabel("<b>IDLE</b>")
 		self.InfoLabel.setAlignment(Qt.AlignCenter)
 		self.GBInfoLayout.addWidget(self.InfoLabelText)
 		self.GBInfoLayout.addWidget(self.InfoLabel)
@@ -143,9 +143,11 @@ class GuiPencere(QWidget):
 		self.SerialConnectButon.setDisabled(True)
 		self.SerialDisconnectButon.setEnabled(True)
 		self.ClearButon.setEnabled(True)
+		self.InfoLabel.setText("<b>RUNNING</b>")
 		self.timer=QTimer()
 		self.timer.timeout.connect(self.cycle)
 		self.timer.start(33)
+
 
 	def data_clear(self):
 		port.clear_array()
@@ -163,6 +165,7 @@ def close_serial_port():
 	pencere.SerialConnectButon.setEnabled(True)
 	pencere.SerialDisconnectButon.setEnabled(False)
 	pencere.ClearButon.setEnabled(False)
+	pencere.InfoLabel.setText("<b>STOPPED</b>")
 	pencere.timer.stop()
 
 
