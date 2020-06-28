@@ -17,13 +17,13 @@ class GuiPencere(QWidget):
 		self.setWindowTitle("MPU6050")
 
 		self.mainLayout=QHBoxLayout(self)
-		self.vLayoutL=QVBoxLayout(self)
-		self.vLayoutR=QVBoxLayout(self)
+		self.vLayoutL=QVBoxLayout()
+		self.vLayoutR=QVBoxLayout()
 		self.setLayout(self.mainLayout)
 
 		self.GBInfo=QGroupBox("Info")
 		self.GBInfo.setAlignment(Qt.AlignCenter)
-		self.GBInfoLayout=QVBoxLayout(self)
+		self.GBInfoLayout=QVBoxLayout()
 		self.GBInfoLayout.setAlignment(Qt.AlignCenter)
 		self.GBInfo.setLayout(self.GBInfoLayout)
 		self.GBInfo.setMaximumWidth(min_width)
@@ -36,7 +36,7 @@ class GuiPencere(QWidget):
 
 		self.GBSerial=QGroupBox("Serial Settings")
 		self.GBSerial.setAlignment(Qt.AlignCenter)
-		self.GBSerialLayout=QVBoxLayout(self)
+		self.GBSerialLayout=QVBoxLayout()
 		self.GBSerial.setLayout(self.GBSerialLayout)
 		self.GBSerial.setMaximumWidth(min_width)
 		self.GBSerial.setMinimumWidth(min_width)
@@ -53,7 +53,7 @@ class GuiPencere(QWidget):
 
 		self.GBConnect=QGroupBox("Control")
 		self.GBConnect.setAlignment(Qt.AlignCenter)
-		self.GBConnectLayout=QVBoxLayout(self)
+		self.GBConnectLayout=QVBoxLayout()
 		self.GBConnect.setLayout(self.GBConnectLayout)
 		self.GBConnect.setMaximumWidth(min_width)
 		self.GBConnect.setMinimumWidth(min_width)
@@ -67,7 +67,7 @@ class GuiPencere(QWidget):
 
 		self.GBClear=QGroupBox("Data")
 		self.GBClear.setAlignment(Qt.AlignCenter)
-		self.GBClearLayout=QVBoxLayout(self)
+		self.GBClearLayout=QVBoxLayout()
 		self.GBClear.setLayout(self.GBClearLayout)
 		self.GBClear.setMaximumWidth(min_width)
 		self.GBClear.setMinimumWidth(min_width)
